@@ -2,13 +2,23 @@
 
 void setup() {
   pinMode(buzzer, OUTPUT);
-  acionarBuzzer();
+  bipeInicial();
+  delay(1000);  // Menagens de inicialização
+  bipeFinalInicializacao();
 }
 
 void loop() {
 }
 
-void acionarBuzzer() {
+void bipeInicial() {
+  // tone(buzzer, 988, 80); 
+  // delay(80);
+  
+  tone(buzzer, 1319, 300); 
+  delay(2000);
+}
+
+void bipeFinalInicializacao() {
   tone(buzzer, 988, 80); 
   delay(80);
   
