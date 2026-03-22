@@ -6,17 +6,15 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 void setup() {
   lcd.begin(16, 2);
   lcd.clear();
-  lcd.print("Inicializando...");
-  delay(500);
-}
-
-void loop() {
   mensagemUniversidadeDiciplina();
   delay(3000);
   nomeRA();
   delay(3000);
   nomeEBoasVindas();
   delay(3000);
+}
+
+void loop() {
 }
 
 void nomeRA() {
