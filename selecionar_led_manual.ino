@@ -12,11 +12,13 @@
 
 #define select A0
 #define test A1
+#define reset A2
 
 int ledSelecionado = 1;
 int delayLedsVerdes = 200;
 
 void setup() {
+  // Leds
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
   pinMode(led3, OUTPUT);
@@ -27,8 +29,12 @@ void setup() {
   pinMode(led7, OUTPUT);
   pinMode(ledVermelho, OUTPUT);
   pinMode(ledAmarelo, OUTPUT);
+
+  // Botões
   pinMode(select, INPUT); 
   pinMode(test, INPUT);
+  pinMode(reset, INPUT);
+
 }
 
 void loop() {
@@ -40,7 +46,7 @@ void loop() {
 void selecionarLed() {
   if (digitalRead(select) == HIGH) {
     ledSelecionado++;
-    if (ledSelecionado > 10) {
+    if (ledSelecionado > 9) {
       ledSelecionado = 1;
     }
     delay(200);  // Tempo entre um clique e outro para evitar múltiplas seleções acidentais
@@ -78,10 +84,13 @@ void acionarLed() {
       case 9:
         testeLedVermelhoEAmarelo();
         break;
-      case 10:
-        acionarTodosLedsVerdes();
-        break;
     }
+    delay(200);  // Deley entre cliques para evitar múltiplas ativações acidentais
+  }
+
+  if (digitalRead(reset) == HIGH) {
+    acionarTodosLedsVerdes();
+    ledSelecionado = 1; // Reseta a seleção para o primeiro led
     delay(200);  // Deley entre cliques para evitar múltiplas ativações acidentais
   }
 }
