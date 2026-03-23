@@ -40,7 +40,7 @@ void loop() {
 void selecionarLed() {
   if (digitalRead(select) == HIGH) {
     ledSelecionado++;
-    if (ledSelecionado > 9) {
+    if (ledSelecionado > 10) {
       ledSelecionado = 1;
     }
     delay(200);  // Tempo entre um clique e outro para evitar múltiplas seleções acidentais
@@ -77,6 +77,9 @@ void acionarLed() {
         break;
       case 9:
         testeLedVermelhoEAmarelo();
+        break;
+      case 10:
+        acionarTodosLedsVerdes();
         break;
     }
     delay(200);  // Deley entre cliques para evitar múltiplas ativações acidentais
@@ -146,4 +149,27 @@ void testeLedVermelhoEAmarelo() {
   delay(delayLedsVerdes);
   digitalWrite(ledVermelho, LOW);
   digitalWrite(ledAmarelo, LOW);
+}
+
+///** Função para acionar todos os leds verdes ao mesmo tempo. */
+void acionarTodosLedsVerdes() {
+  digitalWrite(led1, HIGH);
+  digitalWrite(led2, HIGH);
+  digitalWrite(led3, HIGH);
+  digitalWrite(led4, HIGH);
+  digitalWrite(led5, HIGH);
+  digitalWrite(led6, HIGH);
+  digitalWrite(led7, HIGH);
+  digitalWrite(led8, HIGH);
+
+  delay(delayLedsVerdes);
+
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+  digitalWrite(led5, LOW);
+  digitalWrite(led6, LOW);
+  digitalWrite(led7, LOW);
+  digitalWrite(led8, LOW);
 }
