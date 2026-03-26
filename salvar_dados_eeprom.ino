@@ -27,11 +27,11 @@ void loop() {
 void mensagensModoManual() {
   int quantidadeCiclosSalva;
   EEPROM.get(enderecoCiclos, quantidadeCiclosSalva); // Lê a quantidade de ciclos salva na EEPROM
-  qtCiclos = quantidadeCiclosSalva; // Atualiza a variável qt
+  int qtCiclosRecuperada = quantidadeCiclosSalva; // Atualiza a variável qt
     lcd.clear();
     lcd.setCursor(0, 0);
     // lcd.print("Man | Valvula:3");
-    lcd.print("Man | Ciclo: " + String(qtCiclos));
+    lcd.print("Man | Ciclo: " + String(qtCiclosRecuperada));
     lcd.setCursor(0, 1);
     lcd.print("Pressao: 120");
 }
@@ -39,10 +39,10 @@ void mensagensModoManual() {
 void mensagensModoAutomatico() {
   int quantidadeCiclosSalva;
   EEPROM.get(enderecoCiclos, quantidadeCiclosSalva); // Lê a quantidade de ciclos salva na EEPROM
-  qtCiclos = quantidadeCiclosSalva; // Atualiza a variável qt
+  int qtCiclosRecuperada = quantidadeCiclosSalva; // Atualiza a variável qt
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Auto | Ciclo: " + String(qtCiclos));
+    lcd.print("Auto | Ciclo: " + String(qtCiclosRecuperada));
     lcd.setCursor(0, 1);
     lcd.print("Pressao: 120");
 }
