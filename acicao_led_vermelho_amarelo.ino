@@ -14,7 +14,7 @@
 #define test A1
 #define reset A2
 
-int val;
+int valorLido;
 
 void setup() {
   pinMode(led1, OUTPUT);

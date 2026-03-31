@@ -7,7 +7,7 @@
 #define led8 8
 #define led9 9
 
-int val;
+int valorLido;
 
 void setup() {
   pinMode(led1, OUTPUT);
