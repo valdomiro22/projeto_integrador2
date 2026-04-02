@@ -10,12 +10,15 @@
 #define ledVermelho 12
 #define ledAmarelo 13
 
+#define chaveManualAutomatico 3
+
 #define select A0
 #define test A1
 #define reset A2
 
 int ledSelecionado = 1;
 int delayLedsVerdes = 200;
+int estadoAnteriorChave = -1; // Começa em -1 para forçar a primeira atualização na tela
 
 void setup() {
   // Leds
@@ -28,19 +31,52 @@ void setup() {
   pinMode(led8, OUTPUT);
   pinMode(led7, OUTPUT);
   pinMode(ledVermelho, OUTPUT);
-  pinMode(ledAmarelo, OUTPUT);
-
+  pinMode(chaveManualAutomatico, INPUT);
+  
   // Botões
   pinMode(select, INPUT); 
   pinMode(test, INPUT);
   pinMode(reset, INPUT);
 
+  pinMode(ledAmarelo, OUTPUT);
 }
 
 void loop() {
+  int estadoAtualChave = digitalRead(chaveManualAutomatico);
+
+  if (estadoAtualChave == HIGH) {
+    modoAutomatico();
+  } else {
+    modoManual();        // aqui deve ficar em loop constante
+  }
+}
+
+void selecionarModoOperacao() {
+  // Lê o estado atual da chave
+  int estadoAtualChave = digitalRead(chaveManualAutomatico);
+
+  // Só atualiza o display e o LED SE o estado da chave mudou
+  if (estadoAtualChave != estadoAnteriorChave) {
+    if (estadoAtualChave == HIGH) {
+      modoAutomatico();
+    } else {
+      modoManual();
+    }
+    
+    // Atualiza a memória com o estado atual
+    estadoAnteriorChave = estadoAtualChave;
+  }
+}
+
+void modoAutomatico() {
+  acionarTodosLedsVerdes(); 
+}
+
+void modoManual() {
   selecionarLed();
   acionarLed(); 
 }
+
 
 /** Função para selecionar o led a ser acionado. */
 void selecionarLed() {
@@ -170,9 +206,10 @@ void acionarTodosLedsVerdes() {
   digitalWrite(led6, HIGH);
   digitalWrite(led7, HIGH);
   digitalWrite(led8, HIGH);
-
+  digitalWrite(ledAmarelo, HIGH);
+  
   delay(delayLedsVerdes);
-
+  
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
   digitalWrite(led3, LOW);
@@ -181,4 +218,5 @@ void acionarTodosLedsVerdes() {
   digitalWrite(led6, LOW);
   digitalWrite(led7, LOW);
   digitalWrite(led8, LOW);
+  digitalWrite(ledAmarelo, LOW);
 }
