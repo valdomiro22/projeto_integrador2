@@ -21,6 +21,8 @@ int delayLedsVerdes = 200;
 int estadoAnteriorChave = -1; // Começa em -1 para forçar a primeira atualização na tela
 
 void setup() {
+  Serial.begin(9600);
+
   // Leds
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
@@ -42,12 +44,25 @@ void setup() {
 }
 
 void loop() {
-  int estadoAtualChave = digitalRead(chaveManualAutomatico);
+  int estadoAtual = digitalRead(chaveManualAutomatico);
 
-  if (estadoAtualChave == HIGH) {
-    modoAutomatico();
-  } else {
-    modoManual();        // aqui deve ficar em loop constante
+  if (estadoAtual != estadoAnteriorChave) {
+    if (estadoAtual == HIGH) {
+      Serial.write('A');        // Modo Automático
+      modoAutomatico();
+    } else {
+      Serial.write('a');        // Modo Manual
+      modoManual();
+    }
+    estadoAnteriorChave = estadoAtual;
+  } 
+  else {
+    // Mantém executando o modo atual sem enviar serial toda hora
+    if (estadoAtual == HIGH) {
+      modoAutomatico();
+    } else {
+      modoManual();
+    }
   }
 }
 
