@@ -14,7 +14,7 @@
 #define test A1
 #define reset A2
 
-int ledSelecionado = 1;
+int valvulaSelecionada = 1;
 int delayLedsVerdes = 200;
 
 void setup() {
@@ -45,9 +45,9 @@ void loop() {
 /** Função para selecionar o led a ser acionado. */
 void selecionarLed() {
   if (digitalRead(select) == HIGH) {
-    ledSelecionado++;
-    if (ledSelecionado > 9) {
-      ledSelecionado = 1;
+    valvulaSelecionada++;
+    if (valvulaSelecionada > 9) {
+      valvulaSelecionada = 1;
     }
     delay(200);  // Tempo entre um clique e outro para evitar múltiplas seleções acidentais
   }
@@ -56,7 +56,7 @@ void selecionarLed() {
 /** Função para acionar o led selecionado. */
 void acionarLed() {
   if (digitalRead(test) == HIGH) {
-    switch (ledSelecionado) {
+    switch (valvulaSelecionada) {
       case 1:
         acionarLed1();
         break;
@@ -90,7 +90,7 @@ void acionarLed() {
 
   if (digitalRead(reset) == HIGH) {
     acionarTodosLedsVerdes();
-    ledSelecionado = 1; // Reseta a seleção para o primeiro led
+    valvulaSelecionada = 1; // Reseta a seleção para o primeiro led
     delay(200);  // Deley entre cliques para evitar múltiplas ativações acidentais
   }
 }

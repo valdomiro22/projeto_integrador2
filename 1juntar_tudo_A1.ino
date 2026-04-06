@@ -16,7 +16,7 @@
 #define test A1
 #define reset A2
 
-int ledSelecionado = 1;
+int valvulaSelecionada = 1;
 int delayLedsVerdes = 200;
 int estadoAnteriorChave = -1; // Começa em -1 para forçar a primeira atualização na tela
 
@@ -47,23 +47,24 @@ void loop() {
   int estadoAtual = digitalRead(chaveManualAutomatico);
 
   if (estadoAtual != estadoAnteriorChave) {
-    if (estadoAtual == HIGH) {
-      Serial.write('A');        // Modo Automático
-      modoAutomatico();
-    } else {
-      Serial.write('a');        // Modo Manual
-      modoManual();
-    }
     estadoAnteriorChave = estadoAtual;
+    enviarDados();
   } 
-  else {
-    // Mantém executando o modo atual sem enviar serial toda hora
-    if (estadoAtual == HIGH) {
-      modoAutomatico();
-    } else {
-      modoManual();
-    }
+    
+  if (estadoAtual == HIGH) {
+    modoAutomatico();
+  } else {
+    modoManual();
   }
+  
+}
+
+void enviarDados() {
+  char modo = (digitalRead(chaveManualAutomatico) == HIGH) ? 'A' : 'M';
+  
+  Serial.print(modo);              // Envia 'A' ou 'M'
+  Serial.print(valvulaSelecionada); // Envia o número (1 a 9)
+  Serial.print('\n');               // Caractere terminador para facilitar a leitura
 }
 
 void selecionarModoOperacao() {
@@ -96,10 +97,12 @@ void modoManual() {
 /** Função para selecionar o led a ser acionado. */
 void selecionarLed() {
   if (digitalRead(select) == HIGH) {
-    ledSelecionado++;
-    if (ledSelecionado > 9) {
-      ledSelecionado = 1;
+    valvulaSelecionada++;
+    if (valvulaSelecionada > 9) {
+      valvulaSelecionada = 1;
     }
+
+    enviarDados();
     delay(200);  // Tempo entre um clique e outro para evitar múltiplas seleções acidentais
   }
 }
@@ -107,7 +110,7 @@ void selecionarLed() {
 /** Função para acionar o led selecionado. */
 void acionarLed() {
   if (digitalRead(test) == HIGH) {
-    switch (ledSelecionado) {
+    switch (valvulaSelecionada) {
       case 1:
         acionarLed1();
         break;
@@ -141,7 +144,7 @@ void acionarLed() {
 
   if (digitalRead(reset) == HIGH) {
     acionarTodosLedsVerdes();
-    ledSelecionado = 1; // Reseta a seleção para o primeiro led
+    valvulaSelecionada = 1; // Reseta a seleção para o primeiro led
     delay(200);  // Deley entre cliques para evitar múltiplas ativações acidentais
   }
 }
