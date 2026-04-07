@@ -1,6 +1,8 @@
 #include <LiquidCrystal.h>
 LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
 
+#define buzzer 8
+
 unsigned long tempoAnterior = 0;
 char modoAtual = 'M';        // Começa em Manual por padrão
 char valorRecebido = '1';
@@ -12,10 +14,12 @@ int ciclosAtual = 0;
 
 void setup() {
   pinMode(potenciometro, INPUT);
+  pinMode(buzzer, OUTPUT);
 
   Serial.begin(9600);
   lcd.begin(16, 2);
   lcd.clear();
+  bipeInicial();
   atualizarDisplayModo(); // Mostra o estado inicial
 }
 
@@ -52,6 +56,20 @@ void loop() {
       atualizarDisplayModo();
     }
   }
+}
+
+void bipeInicial() {
+  tone(buzzer, 1319, 300); 
+  delay(1000);
+}
+
+void bipeFinalInicializacao() {
+  tone(buzzer, 988, 80); 
+  delay(150);
+  
+  //tone(buzzer, 1319, 300); 
+  tone(buzzer, 988, 80); 
+  delay(150);
 }
 
 // Essa função agora apenas decide QUAL layout desenhar
