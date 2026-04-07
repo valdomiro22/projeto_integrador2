@@ -16,9 +16,11 @@
 #define test A1
 #define reset A2
 
+bool modoAutomaticoAtivo = false;
 int valvulaSelecionada = 1;
 int delayLedsVerdes = 200;
 int estadoAnteriorChave = -1; // Começa em -1 para forçar a primeira atualização na tela
+int tempoDoRA = 1000; // Tempo que os leds ficam acesos no modo automático (pode ser ajustado conforme necessário)
 
 void setup() {
   Serial.begin(9600);
@@ -68,8 +70,10 @@ void loop() {
   } 
     
   if (estadoAtual == HIGH) {
+    modoAutomaticoAtivo = true;
     modoAutomatico();
   } else {
+    modoAutomaticoAtivo = false;
     modoManual();
   }
   
@@ -90,8 +94,10 @@ void selecionarModoOperacao() {
   // Só atualiza o display e o LED SE o estado da chave mudou
   if (estadoAtualChave != estadoAnteriorChave) {
     if (estadoAtualChave == HIGH) {
+      modoAutomaticoAtivo = true;
       modoAutomatico();
     } else {
+      modoAutomaticoAtivo = false;
       modoManual();
     }
     
@@ -105,6 +111,7 @@ void modoAutomatico() {
 }
 
 void modoManual() {
+  digitalWrite(ledAmarelo, LOW); // Apaga o led amarelo para indicar que não está mais no modo automático
   selecionarLed();
   acionarLed(); 
 }
@@ -231,25 +238,39 @@ void testeLedVermelhoEAmarelo() {
 
 ///** Função para acionar todos os leds verdes ao mesmo tempo. */
 void acionarTodosLedsVerdes() {
-  digitalWrite(led1, HIGH);
-  digitalWrite(led2, HIGH);
-  digitalWrite(led3, HIGH);
-  digitalWrite(led4, HIGH);
-  digitalWrite(led5, HIGH);
-  digitalWrite(led6, HIGH);
-  digitalWrite(led7, HIGH);
-  digitalWrite(led8, HIGH);
-  digitalWrite(ledAmarelo, HIGH);
-  
-  delay(delayLedsVerdes);
-  
-  digitalWrite(led1, LOW);
-  digitalWrite(led2, LOW);
-  digitalWrite(led3, LOW);
-  digitalWrite(led4, LOW);
-  digitalWrite(led5, LOW);
-  digitalWrite(led6, LOW);
-  digitalWrite(led7, LOW);
-  digitalWrite(led8, LOW);
-  digitalWrite(ledAmarelo, LOW);
+  while (modoAutomaticoAtivo){
+    digitalWrite(ledAmarelo, HIGH);
+    acionarLed1();
+    if (!modoAutomaticoAtivo) break;
+
+    acionarLed2();
+    selecionarModoOperacao();
+    if (!modoAutomaticoAtivo) break;
+
+    acionarLed3();
+    selecionarModoOperacao();
+    if (!modoAutomaticoAtivo) break;
+
+    acionarLed4();
+    selecionarModoOperacao();
+    if (!modoAutomaticoAtivo) break;
+
+    acionarLed5();
+    selecionarModoOperacao();
+    if (!modoAutomaticoAtivo) break;
+
+    acionarLed6();
+    selecionarModoOperacao();
+    if (!modoAutomaticoAtivo) break;
+
+    acionarLed7();
+    selecionarModoOperacao();
+    if (!modoAutomaticoAtivo) break;
+
+    acionarLed8();
+    selecionarModoOperacao();
+    if (!modoAutomaticoAtivo) break;
+    
+    delay(tempoDoRA);
+  }
 }
