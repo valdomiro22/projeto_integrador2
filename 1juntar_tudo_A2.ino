@@ -6,6 +6,7 @@ char modoAtual = 'M';        // Começa em Manual por padrão
 char valorRecebido = '1';
 int pressaoAnterior = -1;
 int pressaoAtual = 0;
+int ciclosAtual = 0;
 
 #define potenciometro A0
 
@@ -30,11 +31,24 @@ void loop() {
   }
 
   // 3. SE CHEGOU ALGO NA SERIAL, ATUALIZA O MODO E O DISPLAY
-  if (Serial.available() >= 2) {
+  if (Serial.available() >= 3) {        // pelo menos "A1,0\n" ou maior
     char c = Serial.read();
+    
     if (c == 'A' || c == 'M') {
       modoAtual = c;
-      valorRecebido = Serial.read(); 
+      
+      // Lê o número da válvula (pode ser 1 dígito ou mais no futuro)
+      valorRecebido = Serial.read();   // ainda mantendo como char por enquanto
+      
+      // Lê a vírgula
+      if (Serial.read() == ',') {
+        // Lê os ciclos até o \n
+        ciclosAtual = Serial.parseInt();   // lê o número inteiro
+      }
+      
+      // Limpa o buffer até o \n (segurança)
+      while (Serial.available() && Serial.read() != '\n');
+      
       atualizarDisplayModo();
     }
   }
@@ -52,22 +66,22 @@ void atualizarDisplayModo() {
 void mensagensModoManual() {
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Man | Valvula: ");
+  lcd.print("Man | Valv: ");
   lcd.print(valorRecebido);
-  
+
   lcd.setCursor(0, 1);
-  lcd.print("Pressao: ");
+  lcd.print("Press: ");
   lcd.print(pressaoAtual);
-  lcd.print("   "); // Espaços extras para apagar números antigos (ex: mudar de 100 para 99)
 }
 
 void mensagensModoAutomatico() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Auto | Ciclo: ");
-  lcd.print("14");
+  lcd.print(ciclosAtual);        // ← agora mostra o valor real!
+
   lcd.setCursor(0, 1);
   lcd.print("Pressao: ");
   lcd.print(pressaoAtual);
-  lcd.print("   "); // Limpa o rastro de dígitos
+  lcd.print("%");
 }

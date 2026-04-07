@@ -1,3 +1,5 @@
+#include <EEPROM.h>
+
 #define led1 4
 #define led2 5
 #define led3 6
@@ -16,8 +18,10 @@
 #define test A1
 #define reset A2
 
+int qtCiclos = 0; // Variável para contar os ciclos no modo automático
+int enderecoCiclos = 0; // Endereço na EEPROM para armazenar a quantidade de ciclos
 int valvulaSelecionada = 1;
-int delayLedsVerdes = 200;
+int tempoValvulaLigada = 200;
 int estadoAnteriorChave = -1; // Começa em -1 para forçar a primeira atualização na tela
 
 void setup() {
@@ -60,11 +64,16 @@ void loop() {
 }
 
 void enviarDados() {
+  int quantidadeCiclosSalva;
+  EEPROM.get(enderecoCiclos, quantidadeCiclosSalva); 
+  
   char modo = (digitalRead(chaveManualAutomatico) == HIGH) ? 'A' : 'M';
   
-  Serial.print(modo);              // Envia 'A' ou 'M'
-  Serial.print(valvulaSelecionada); // Envia o número (1 a 9)
-  Serial.print('\n');               // Caractere terminador para facilitar a leitura
+  Serial.print(modo);                    // 'A' ou 'M'
+  Serial.print(valvulaSelecionada);      // número da válvula (1-9)
+  Serial.print(',');                     // separador
+  Serial.print(quantidadeCiclosSalva);   // quantidade de ciclos
+  Serial.print('\n');                    // terminador
 }
 
 void selecionarModoOperacao() {
@@ -92,7 +101,6 @@ void modoManual() {
   selecionarLed();
   acionarLed(); 
 }
-
 
 /** Função para selecionar o led a ser acionado. */
 void selecionarLed() {
@@ -152,56 +160,56 @@ void acionarLed() {
 /** Função para acionar o led 1. */
 void acionarLed1() {
   digitalWrite(led1, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led1, LOW);
 }
 
 /** Função para acionar o led 2. */
 void acionarLed2() {
   digitalWrite(led2, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led2, LOW);
 }
 
 /** Função para acionar o led 3. */   
 void acionarLed3() {
   digitalWrite(led3, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led3, LOW);
 }
 
 /** Função para acionar o led 4. */
 void acionarLed4() {
   digitalWrite(led4, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led4, LOW);
 }
 
 /** Função para acionar o led 5. */
 void acionarLed5() {
   digitalWrite(led5, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led5, LOW);
 }
 
 /** Função para acionar o led 6. */
 void acionarLed6() {
   digitalWrite(led6, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led6, LOW);
 }
 
 /** Função para acionar o led 7. */
 void acionarLed7() {
   digitalWrite(led7, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led7, LOW);
 }
 
 /** Função para acionar o led 8. */
 void acionarLed8() {
   digitalWrite(led8, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led8, LOW);
 }
 
@@ -209,7 +217,7 @@ void acionarLed8() {
 void testeLedVermelhoEAmarelo() {
   digitalWrite(ledVermelho, HIGH);
   digitalWrite(ledAmarelo, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(ledVermelho, LOW);
   digitalWrite(ledAmarelo, LOW);
 }
@@ -226,7 +234,7 @@ void acionarTodosLedsVerdes() {
   digitalWrite(led8, HIGH);
   digitalWrite(ledAmarelo, HIGH);
   
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
@@ -237,4 +245,9 @@ void acionarTodosLedsVerdes() {
   digitalWrite(led7, LOW);
   digitalWrite(led8, LOW);
   digitalWrite(ledAmarelo, LOW);
+
+  qtCiclos++; // Incrementa o contador de ciclos no modo automático
+  EEPROM.put(enderecoCiclos, qtCiclos); // Salva a quantidade de ciclos na EEPROM
+
+  enviarDados();
 }

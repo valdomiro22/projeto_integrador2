@@ -15,7 +15,7 @@
 #define reset A2
 
 int valvulaSelecionada = 1;
-int delayLedsVerdes = 200;
+int tempoValvulaLigada = 200;
 
 void setup() {
   // Leds
@@ -98,56 +98,56 @@ void acionarLed() {
 /** Função para acionar o led 1. */
 void acionarLed1() {
   digitalWrite(led1, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led1, LOW);
 }
 
 /** Função para acionar o led 2. */
 void acionarLed2() {
   digitalWrite(led2, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led2, LOW);
 }
 
 /** Função para acionar o led 3. */   
 void acionarLed3() {
   digitalWrite(led3, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led3, LOW);
 }
 
 /** Função para acionar o led 4. */
 void acionarLed4() {
   digitalWrite(led4, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led4, LOW);
 }
 
 /** Função para acionar o led 5. */
 void acionarLed5() {
   digitalWrite(led5, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led5, LOW);
 }
 
 /** Função para acionar o led 6. */
 void acionarLed6() {
   digitalWrite(led6, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led6, LOW);
 }
 
 /** Função para acionar o led 7. */
 void acionarLed7() {
   digitalWrite(led7, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led7, LOW);
 }
 
 /** Função para acionar o led 8. */
 void acionarLed8() {
   digitalWrite(led8, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(led8, LOW);
 }
 
@@ -155,7 +155,7 @@ void acionarLed8() {
 void testeLedVermelhoEAmarelo() {
   digitalWrite(ledVermelho, HIGH);
   digitalWrite(ledAmarelo, HIGH);
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
   digitalWrite(ledVermelho, LOW);
   digitalWrite(ledAmarelo, LOW);
 }
@@ -171,7 +171,7 @@ void acionarTodosLedsVerdes() {
   digitalWrite(led7, HIGH);
   digitalWrite(led8, HIGH);
 
-  delay(delayLedsVerdes);
+  delay(tempoValvulaLigada);
 
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
