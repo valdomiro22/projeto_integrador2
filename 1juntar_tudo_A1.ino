@@ -1,3 +1,5 @@
+#include <EEPROM.h>
+
 #define led1 4
 #define led2 5
 #define led3 6
@@ -21,6 +23,8 @@ int valvulaSelecionada = 1;
 int delayLedsVerdes = 200;
 int estadoAnteriorChave = -1; // Começa em -1 para forçar a primeira atualização na tela
 int tempoDoRA = 1000; // Tempo que os leds ficam acesos no modo automático (pode ser ajustado conforme necessário)
+int qtCiclos = 0; // Variável para contar os ciclos no modo automático
+int enderecoCiclos = 0; // Endereço na EEPROM para armazenar a quantidade de ciclos
 
 void setup() {
   Serial.begin(9600);
@@ -80,10 +84,16 @@ void loop() {
 }
 
 void enviarDados() {
+  int quantidadeCiclosSalva;
+  EEPROM.get(enderecoCiclos, quantidadeCiclosSalva); 
+  int qtCiclosRecuperada = quantidadeCiclosSalva; 
+
   char modo = (digitalRead(chaveManualAutomatico) == HIGH) ? 'A' : 'M';
   
   Serial.print(modo);              // Envia 'A' ou 'M'
   Serial.print(valvulaSelecionada); // Envia o número (1 a 9)
+  Serial.print(',');                     // separador
+  Serial.print(quantidadeCiclosSalva);   // quantidade de ciclos
   Serial.print('\n');               // Caractere terminador para facilitar a leitura
 }
 
@@ -270,6 +280,10 @@ void acionarTodosLedsVerdes() {
     acionarLed8();
     selecionarModoOperacao();
     if (!modoAutomaticoAtivo) break;
+
+    qtCiclos++; // Incrementa o contador de ciclos no modo automático
+    EEPROM.put(enderecoCiclos, qtCiclos); // Salva a quantidade de ciclos na EEPROM
+    enviarDados(); // Envia os dados atualizados para o Arduino 2
     
     delay(tempoDoRA);
   }
