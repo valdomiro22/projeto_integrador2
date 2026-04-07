@@ -22,7 +22,7 @@ void setup() {
   mensagensDeInicializacao();
   atualizarDisplayModo(); // Mostra o estado inicial
 }
-
+ 
 void loop() {
   // 1. LER O POTENCIÔMETRO CONSTANTEMENTE
   int valorLido = analogRead(potenciometro);
@@ -82,37 +82,43 @@ void atualizarDisplayModo() {
 }
 
 void mensagensModoManual() {
-  lcd.clear();
+  // lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Man | Valv: ");
   lcd.print(valorRecebido);
-
+  lcd.print("   "); // Limpa o que sobrou do número anterior, caso seja menor que 3 dígitos
+  
   lcd.setCursor(0, 1);
   lcd.print("Press: ");
   lcd.print(pressaoAtual);
+  lcd.print("   "); // Limpa o que sobrou do número anterior, caso seja menor que 3 dígitos
 }
 
 void mensagensModoAutomatico() {
-  lcd.clear();
+  // lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Auto | Ciclo: ");
   lcd.print(ciclosAtual);        // ← agora mostra o valor real!
-
+  lcd.print("   "); // Limpa o que sobrou do número anterior, caso seja menor que 3 dígitos
+  
   lcd.setCursor(0, 1);
   lcd.print("Pressao: ");
   lcd.print(pressaoAtual);
-  lcd.print("%");
+  lcd.print("   "); // Limpa o que sobrou do número anterior, caso seja menor que 3 dígitos
 }
 
 void mensagensDeInicializacao() {
   bipeInicial();
-  mensagemUniversidadeDiciplina();
-  delay(300);
+  // mensagemUniversidadeDiciplina();
+  // delay(300);
   nomeRA();
   delay(300);
-  nomeEBoasVindas();
-  delay(300);
+  // nomeEBoasVindas();
+  // delay(300);
   bipeFinalInicializacao();
+
+  Serial.println("on");
+  delay(100);
 }
 
 void nomeRA() {
