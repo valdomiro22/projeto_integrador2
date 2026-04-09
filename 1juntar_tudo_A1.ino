@@ -54,8 +54,6 @@ void setup() {
     if (Serial.available() > 0) {
       // Lê o que chegou até a quebra de linha (enviada pelo println)
       String comando = Serial.readStringUntil('\n');
-      
-      // Remove espaços vazios ou caracteres de retorno de carro (\r)
       comando.trim(); 
       
       if (comando == "on") {
@@ -81,6 +79,11 @@ void loop() {
     modoManual();
   }
   
+}
+
+void acenderLedVermelho() {
+  digitalWrite(ledVermelho, HIGH);
+  digitalWrite(ledVermelho, LOW);
 }
 
 void enviarDados() {

@@ -1,4 +1,5 @@
 #include <LiquidCrystal.h>
+
 LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
 
 #define buzzer 8
@@ -32,6 +33,12 @@ void loop() {
   if (pressaoAtual != pressaoAnterior) {
     pressaoAnterior = pressaoAtual;
     atualizarDisplayModo();
+    
+    if (pressaoAtual >= 80) {
+        Serial.println("l");
+    } else {
+        Serial.println("f");
+    }
   }
 
   // 3. SE CHEGOU ALGO NA SERIAL, ATUALIZA O MODO E O DISPLAY
