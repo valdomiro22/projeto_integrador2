@@ -64,6 +64,8 @@ void setup() {
 }
 
 void loop() {
+  processarComandosPressao();
+
   int estadoAtual = digitalRead(chaveManualAutomatico);
 
   if (estadoAtual != estadoAnteriorChave) {
@@ -81,9 +83,18 @@ void loop() {
   
 }
 
-void acenderLedVermelho() {
-  digitalWrite(ledVermelho, HIGH);
-  digitalWrite(ledVermelho, LOW);
+void processarComandosPressao() {
+  if (Serial.available() > 0) {
+    String comando = Serial.readStringUntil('\n');
+    comando.trim();
+
+    if (comando == "l") {
+      digitalWrite(ledVermelho, HIGH);   // Pressão alta → LED vermelho aceso
+    }
+    else if (comando == "f") {
+      digitalWrite(ledVermelho, LOW);    // Pressão normal → LED vermelho apagado
+    }
+  }
 }
 
 void enviarDados() {
@@ -252,34 +263,43 @@ void testeLedVermelhoEAmarelo() {
 ///** Função para acionar todos os leds verdes ao mesmo tempo. */
 void acionarTodosLedsVerdes() {
   while (modoAutomaticoAtivo){
+    processarComandosPressao();
+    
     digitalWrite(ledAmarelo, HIGH);
     acionarLed1();
     if (!modoAutomaticoAtivo) break;
-
+    processarComandosPressao();
+    
     acionarLed2();
     selecionarModoOperacao();
     if (!modoAutomaticoAtivo) break;
-
+    processarComandosPressao();
+    
     acionarLed3();
     selecionarModoOperacao();
     if (!modoAutomaticoAtivo) break;
-
+    processarComandosPressao();
+    
     acionarLed4();
     selecionarModoOperacao();
     if (!modoAutomaticoAtivo) break;
-
+    processarComandosPressao();
+    
     acionarLed5();
     selecionarModoOperacao();
     if (!modoAutomaticoAtivo) break;
-
+    processarComandosPressao();
+    
     acionarLed6();
     selecionarModoOperacao();
     if (!modoAutomaticoAtivo) break;
-
+    processarComandosPressao();
+    
     acionarLed7();
     selecionarModoOperacao();
     if (!modoAutomaticoAtivo) break;
-
+    processarComandosPressao();
+    
     acionarLed8();
     selecionarModoOperacao();
     if (!modoAutomaticoAtivo) break;

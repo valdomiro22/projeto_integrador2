@@ -33,13 +33,21 @@ void loop() {
   if (pressaoAtual != pressaoAnterior) {
     pressaoAnterior = pressaoAtual;
     atualizarDisplayModo();
-    
-    if (pressaoAtual >= 80) {
-        Serial.println("l");
-    } else {
-        Serial.println("f");
+
+    // Envia "l" ou "f" APENAS quando o estado realmente muda (transição)
+    static bool estadoAnteriorAlta = false;   // lembra o estado anterior
+
+    bool estadoAtualAlta = (pressaoAtual >= 80);
+
+    if (estadoAtualAlta != estadoAnteriorAlta) {
+        if (estadoAtualAlta) {
+            Serial.println("l");     // Pressão subiu para alta
+        } else {
+            Serial.println("f");     // Pressão caiu para normal
+        }
+        estadoAnteriorAlta = estadoAtualAlta;
     }
-  }
+}
 
   // 3. SE CHEGOU ALGO NA SERIAL, ATUALIZA O MODO E O DISPLAY
   if (Serial.available() >= 3) {        // pelo menos "A1,0\n" ou maior
