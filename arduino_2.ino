@@ -10,6 +10,7 @@ char valorRecebido = '1';
 int pressaoAnterior = -1;
 int pressaoAtual = 0;
 int ciclosAtual = 0;
+int tempoDoRA = (5+1+3+4+4+9+4) * 1000; // 30 segundos
 
 #define potenciometro A0
 
@@ -25,16 +26,16 @@ void setup() {
 }
  
 void loop() {
-  // 1. LER O POTENCIÔMETRO CONSTANTEMENTE
+  // 1. ler o potenciômetro e atualizar a pressão atual
   int valorLido = analogRead(potenciometro);
   pressaoAtual = map(valorLido, 0, 1023, 0, 100);
 
-  // 2. SE A PRESSÃO MUDOU, ATUALIZA O DISPLAY
+  // 2.se a pressão mudou, atualiza o display
   if (pressaoAtual != pressaoAnterior) {
     pressaoAnterior = pressaoAtual;
     atualizarDisplayModo();
 
-    // Envia "l" ou "f" APENAS quando o estado realmente muda (transição)
+    // Envia "l" ou "f" apenas quando o estado realmente muda o modo de operação
     static bool estadoAnteriorAlta = false;   // lembra o estado anterior
 
     bool estadoAtualAlta = (pressaoAtual >= 80);
@@ -49,7 +50,7 @@ void loop() {
     }
 }
 
-  // 3. SE CHEGOU ALGO NA SERIAL, ATUALIZA O MODO E O DISPLAY
+  // 3. se chegou algo na serial, atualiza o modo e o display
   if (Serial.available() >= 3) {        // pelo menos "A1,0\n" ou maior
     char c = Serial.read();
     
@@ -82,12 +83,11 @@ void bipeFinalInicializacao() {
   tone(buzzer, 988, 80); 
   delay(150);
   
-  //tone(buzzer, 1319, 300); 
   tone(buzzer, 988, 80); 
   delay(150);
 }
 
-// Essa função agora apenas decide QUAL layout desenhar
+// Decide qual mensagem mostrar no display com base no modo atual (A ou M)
 void atualizarDisplayModo() {
   if (modoAtual == 'A') {
     mensagensModoAutomatico();
@@ -101,12 +101,12 @@ void mensagensModoManual() {
   lcd.setCursor(0, 0);
   lcd.print("Man | Valv: ");
   lcd.print(valorRecebido);
-  lcd.print("   "); // Limpa o que sobrou do número anterior, caso seja menor que 3 dígitos
+  lcd.print("   "); // Limpa o que sobrou do número anterior, para 3 digitos
   
   lcd.setCursor(0, 1);
   lcd.print("Press: ");
   lcd.print(pressaoAtual);
-  lcd.print("   "); // Limpa o que sobrou do número anterior, caso seja menor que 3 dígitos
+  lcd.print("   "); // Limpa o que sobrou do número anterior, para 3 digitos
 }
 
 void mensagensModoAutomatico() {
@@ -114,23 +114,24 @@ void mensagensModoAutomatico() {
   lcd.setCursor(0, 0);
   lcd.print("Auto | Ciclo: ");
   lcd.print(ciclosAtual);        // ← agora mostra o valor real!
-  lcd.print("   "); // Limpa o que sobrou do número anterior, caso seja menor que 3 dígitos
+  lcd.print("   "); // Limpa o que sobrou do número anterior, para 3 digitos
   
   lcd.setCursor(0, 1);
   lcd.print("Pressao: ");
   lcd.print(pressaoAtual);
-  lcd.print("   "); // Limpa o que sobrou do número anterior, caso seja menor que 3 dígitos
+  lcd.print("   "); // Limpa o que sobrou do número anterior, para 3 digitos
 }
 
 void mensagensDeInicializacao() {
   bipeInicial();
-  // mensagemUniversidadeDiciplina();
-  // delay(300);
-  nomeRA();
+  mensagemUniversidadeDiciplina();
   delay(300);
-  // nomeEBoasVindas();
-  // delay(300);
+  nomeRA();
+  delay(1000);
+  nomeEBoasVindas();
+  delay(300);
   bipeFinalInicializacao();
+  lcd.clear();
 
   Serial.println("on");
   delay(100);
