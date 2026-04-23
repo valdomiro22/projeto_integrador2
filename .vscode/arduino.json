@@ -1,3 +1,5 @@
 {
-    "board": "arduino:avr:uno"
+    "board": "arduino:avr:mega",
+    "port": "COM1",
+    "configuration": "cpu=atmega2560"
 }
